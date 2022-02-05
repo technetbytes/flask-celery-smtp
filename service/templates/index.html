@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Flask + Celery + SMTPLib Examples</title>
+    <title>Sending Email using Flask + Celery + SMTPLib</title>
     <style>
         .progress {
             width: 100%;
@@ -9,16 +9,30 @@
     </style>
   </head>
   <body>
-    <h1>Flask + Celery + SMTPLib Examples</h1>
-    <h2>Send Asynchronous Email</h2>
-    {% for message in get_flashed_messages() %}
+    <h1>Sending Email using Flask + Celery + SMTPLib</h1>
+  {% for message in get_flashed_messages() %}
     <p style="color: red;">{{ message }}</p>
     {% endfor %}
     <form method="POST">
-      <p>Send test email to: <input type="text" name="email" value="{{ email }}"></p>
-      <p>Subject: <input type="text" name="subject"></p>
-      <p>Body: <input type="text" name="body"></p>
-      <input type="submit" name="submit" value="Send">
+
+      <table style="width:100%">
+        <tr>
+          <td>To</td>
+          <td><input type="text" name="email" value="{{ email }}"></td>
+        </tr>
+        <tr>
+          <td>Subject</td>
+          <td><input type="text" name="subject" width="100%"></td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td><textarea name="body" rows="20" cols="100">The cat was playing in the garden.</textarea></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="submit" name="submit" value="Send"></td>
+        </tr>
+      </table>      
     </form>
     <hr>
 
