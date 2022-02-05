@@ -10,7 +10,7 @@
   </head>
   <body>
     <h1>Flask + Celery + SMTPLib Examples</h1>
-    <h2>Example 1: Send Asynchronous Email</h2>
+    <h2>Send Asynchronous Email</h2>
     {% for message in get_flashed_messages() %}
     <p style="color: red;">{{ message }}</p>
     {% endfor %}
@@ -19,7 +19,6 @@
       <p>Subject: <input type="text" name="subject"></p>
       <p>Body: <input type="text" name="body"></p>
       <input type="submit" name="submit" value="Send">
-      <input type="submit" name="submit" value="Send in 1 minute">
     </form>
     <hr>
 

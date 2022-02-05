@@ -1,6 +1,6 @@
 from pyexpat.errors import messages
 import yaml
-from flask import Flask, request, render_template, session, flash, redirect, url_for, jsonify
+from flask import Flask, request, render_template, session, flash, redirect, url_for
 from celerycontext import make_celery
 import smtplib , ssl
 
@@ -16,6 +16,8 @@ def get_configuration():
 
 def init_smtp_server(config):
     try:
+        # Initialize smtp server
+        print(" init smtp server")
         sender_email = config['smtp_server']['username']
         sender_pass = config['smtp_server']['password']
         smtp_server = smtplib.SMTP_SSL(config['smtp_server']['gateway'], config['smtp_server']['port'])
@@ -25,6 +27,7 @@ def init_smtp_server(config):
     except Exception as e:
         # Print any error messages to stdout
         print("error :- ",e)
+    return smtp_server
 
 
 def build_message(email_info, from_address):
@@ -47,13 +50,8 @@ config = get_configuration()
 flask_app.config['SECRET_KEY'] = config['others']['secret_key']
 flask_app.config['SEND_INFO'] = config['email']['sender']
 
-# Initialize smtp server
-print(" init smtp server")
-init_smtp_server(config)
-
 # Initialize object
 celery = make_celery(flask_app)
-
 
 @celery.task
 def send_async_email(email_info):
@@ -62,7 +60,9 @@ def send_async_email(email_info):
     context = ssl.create_default_context()
     try:
         message = build_message(email_info, flask_app.config['SEND_INFO'])
-        print("messages ....")
+        smtp_server = init_smtp_server(config)
+        print(smtp_server)
+        print("message sent ....")
         smtp_server.send_message(message)
     except Exception as e:
         # Print any error messages to stdout
@@ -87,10 +87,6 @@ def index():
         # send right away
         send_async_email.delay(email_data)
         flash('Sending email to {0}'.format(email))
-    else:
-        # send in one minute
-        send_async_email.apply_async(args=[email_data], countdown=60)
-        flash('An email will be sent to {0} in one minute'.format(email))
 
     return redirect(url_for('index'))
 
