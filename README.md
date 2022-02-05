@@ -1,4 +1,4 @@
 # Flask-Celery-SMTPLib
 
-![Running Template View!](/templateview.JPG "Running Template View")
+![Running Template View!](/service/templateview.JPG "Running Template View")
  
